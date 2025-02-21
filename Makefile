@@ -1,4 +1,4 @@
-.PHONY: build up down logs clean dep run
+.PHONY: build up down logs clean dep run test
 
 build:
 	docker compose build
@@ -21,5 +21,5 @@ deps:
 	go mod tidy
 
 run:
-	@echo "Starting Go application..."
-	go run main.go
+	@echo "Starting WebSocket Server..."
+	go run cmd/server/main.go
