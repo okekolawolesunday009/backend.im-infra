@@ -21,5 +21,5 @@ deps:
 	go mod tidy
 
 run:
-	@echo "Starting WebSocket Server..."
+	@echo "Starting Orchestration App..."
 	go run cmd/server/main.go
