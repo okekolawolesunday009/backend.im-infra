@@ -1,4 +1,4 @@
-.PHONY: build up down logs clean
+.PHONY: build up down logs clean dep run test
 
 build:
 	docker compose build
@@ -15,3 +15,11 @@ logs:
 clean:
 	docker compose down -v
 	rm -rf repos-data/* kube-config/*
+
+deps:
+	@echo "Installing Go dependencies..."
+	go mod tidy
+
+run:
+	@echo "Starting Orchestration App..."
+	go run cmd/server/main.go
