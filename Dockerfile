@@ -41,10 +41,11 @@ COPY deployments/ ./deployments/
 # Security hardening
 RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} + && \
   adduser -D -u 1001 backenduser && \
-  mkdir -p /home/backenduser/.kube /home/backenduser/.aws && \
+  mkdir -p /home/backenduser/.kube/manual /home/backenduser/.aws && \
   chown -R backenduser:backenduser /app /home/backenduser/.kube /home/backenduser/.aws && \
   chmod 0755 /home/backenduser && \
-  chmod 0700 /home/backenduser/.kube /home/backenduser/.aws
+  chmod 0700 /home/backenduser/.kube /home/backenduser/.aws && \
+  chmod 0755 /home/backenduser/.kube/manual
 
 ENV KUBECONFIG=/home/backenduser/.kube/config \
   AWS_CONFIG_FILE=/home/backenduser/.aws/config \
