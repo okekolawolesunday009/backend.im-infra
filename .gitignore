@@ -7,3 +7,9 @@ repos-data
 kube-config
 .env
 
+# Kubernetes configuration files
+/kubeconfig/
+*.kubeconfig
+kubeconfig.yaml
+.kube/
+

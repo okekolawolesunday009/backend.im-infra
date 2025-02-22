@@ -86,6 +86,33 @@ backend.im-infra/
 - Python 3.9+ (client side)
 - Go 1.18+ (server side)
 
+## 🛠 Manual Kubeconfig Mode
+
+1. **Place your kubeconfig file** in the project directory  
+   Common locations:
+   ```bash
+   cp ~/.kube/config ./kubeconfig/prod-cluster.yaml  # Recommended: kubeconfig/ subdir
+   # OR
+   cp ~/.kube/config ./cluster-access.kubeconfig    # Root directory
+   ```
+
+2. **Configure environment** (`.env` file):
+   ```bash
+   KUBECONFIG_MODE=manual
+   KUBECONFIG_FILE=./kubeconfig/prod-cluster.yaml  # Path relative to project root
+   ```
+
+3. **Start normally** - Volume mount handled automatically:
+   ```bash
+   docker compose up
+   ```
+
+❗ **Security Note**: Your kubeconfig file contains sensitive credentials!  
+✅ Verified safe patterns in `.gitignore`:
+- `*.kubeconfig`
+- `/kubeconfig/`
+- `kubeconfig.yaml`
+
 ## 🚀 Quick Start
 
 ### 1. Clone and Prepare
