@@ -20,6 +20,7 @@ class ProdDeployer:
             self._ensure_pod_exists()
             self._sync_code()
             self._restart_app()
+            self._expose_endpoint()
             self.result["status"] = "success"
         except Exception as e:
             self.result.update({
@@ -63,6 +64,32 @@ class ProdDeployer:
             "kubectl", "-n", self.namespace, "exec", self.pod_name, "--",
             "sh", "-c", "cd /app/repo && uvicorn main:app --host 0.0.0.0 --port $DEPLOY_PORT"
         ], "Start app", background=True)
+
+    def _expose_endpoint(self):
+        """Applies ingress template with namespace substitution"""
+        import tempfile
+        try:
+            # Load and process ingress template
+            template_path = "deployments/templates/fastapi/prod-ingress.yaml"
+            with open(template_path, "r") as f:
+                ingress_manifest = f.read().replace("{{NAMESPACE}}", self.namespace)
+            
+            # Create temp file
+            with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmp_file:
+                tmp_file.write(ingress_manifest)
+                tmp_path = tmp_file.name
+            
+            # Apply manifest
+            self._run([
+                "kubectl", "apply", "-f", tmp_path,
+                "-n", self.namespace
+            ], "Update ingress")
+            
+            # Update result with endpoint info
+            self.result["endpoint"] = f"https://{self.namespace}.prod.backend.im"
+            
+        except Exception as e:
+            raise RuntimeError(f"Ingress update failed: {str(e)}")
 
     def _wait_for_pod_ready(self, timeout=120):
         """Wait for pod to become ready"""
