@@ -33,12 +33,18 @@ elif [ "$KUBECONFIG_MODE" = "aws" ]; then
         rm "$HOME/.kube/config"
     fi
     
-    # Configure AWS CLI credentials
+    # Configure AWS CLI
     aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
     aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
     aws configure set default.region ${AWS_DEFAULT_REGION}
-    
-    # Generate kubeconfig
+
+    # Verify EKS cluster exists
+    if ! aws eks describe-cluster --name ${KUBE_CLUSTER_NAME} >/dev/null; then
+        echo "ERROR: Failed to access EKS cluster '${KUBE_CLUSTER_NAME}'" >&2
+        exit 1
+    fi
+
+    # Generate kubeconfig with strict validation
     aws eks update-kubeconfig \
         --name ${KUBE_CLUSTER_NAME} \
         --region ${AWS_DEFAULT_REGION} \
