@@ -1,16 +1,50 @@
+# Security & credentials
 *.key
 *.pem
+*.env
+*.env.local
+.env
 .aider*
+
+# Container & deployment
+docker-compose.override.yml
 repos
 keys
 repos-data
 kube-config
-.env
-venv
 
 # Kubernetes configuration files
 /kubeconfig/
 *.kubeconfig
 kubeconfig.yaml
 .kube/
+
+# Build & runtime
+/dist/
+/bin/
+*.exe
+venv/
+__pycache__/
+*.pyc
+
+# IDE & tooling
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs & debugging
+*.log
+logs/
+npm-debug.log*
+
+# Infrastructure as Code
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# OS specific
+.DS_Store
+Thumbs.db
 
