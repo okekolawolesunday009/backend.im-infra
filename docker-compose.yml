@@ -18,7 +18,7 @@ services:
     volumes:
       - repos-data:/app/repos
       - kube-config:/home/backenduser/.kube
-      - ${KUBECONFIG_FILE:-/dev/null}:/home/backenduser/.kube/config
+      - ${KUBECONFIG_FILE:-/tmp/dummy}:/home/backenduser/.kube/manual/config  # Only for manual mode
     labels:
       - "traefik.enable=true"
       # service
