@@ -5,9 +5,9 @@ services:
     image: backendim-brain
     build: .
     environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - KUBECONFIG_MODE=${KUBECONFIG_MODE:-aws}  # Explicit mode declaration
       - KUBECONFIG_FILE=${KUBECONFIG_FILE:-/dev/null}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
       - KUBE_CLUSTER_NAME=${KUBE_CLUSTER_NAME}

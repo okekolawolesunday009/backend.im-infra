@@ -6,6 +6,7 @@ keys
 repos-data
 kube-config
 .env
+venv
 
 # Kubernetes configuration files
 /kubeconfig/
