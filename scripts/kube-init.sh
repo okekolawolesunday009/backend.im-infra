@@ -45,9 +45,6 @@ elif [ "$KUBECONFIG_MODE" = "aws" ]; then
         --kubeconfig ${KUBECONFIG} \
         --alias automated-cluster
     
-    # Set permissions after generation
-    chmod 0600 ${KUBECONFIG}
-    
     # Verify AWS credentials
     echo "AWS Identity:"
     aws sts get-caller-identity
