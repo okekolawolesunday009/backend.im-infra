@@ -81,12 +81,28 @@ def main():
             }))
             sys.exit(1)
 
-        print(json.dumps({
+        result = {
             "status": "created",
             "namespace": namespace,
             "project_type": project_type,
             "timestamp": timestamp
-        }))
+        }
+
+        # Add deployment step if tests passed
+        if self.result["success"]:
+            deploy_cmd = [
+                "python3", "scripts/deployer.py",
+                "-n", self.namespace,
+                "-r", self.repo_url,
+                "-c", self.commit
+            ]
+            deploy_proc = subprocess.run(deploy_cmd, capture_output=True, text=True)
+            if deploy_proc.returncode == 0:
+                result["production"] = json.loads(deploy_proc.stdout)
+            else:
+                result["deploy_error"] = deploy_proc.stderr
+
+        print(json.dumps(result))
         sys.exit(0)
 
     except Exception as e:
