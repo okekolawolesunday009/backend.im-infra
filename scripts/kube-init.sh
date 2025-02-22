@@ -45,9 +45,8 @@ elif [ "$KUBECONFIG_MODE" = "aws" ]; then
         --kubeconfig ${KUBECONFIG} \
         --alias automated-cluster
     
-    echo "Setting kubeconfig permissions..."
+    # Set permissions after generation
     chmod 0600 ${KUBECONFIG}
-    chown backenduser:backenduser ${KUBECONFIG}
     
     # Verify AWS credentials
     echo "AWS Identity:"
