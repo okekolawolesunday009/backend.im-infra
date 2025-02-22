@@ -27,6 +27,63 @@ sequenceDiagram
     Server->>Client: Return results
 ```
 
+## 🔌 Cluster Connection Guide
+
+**Choose your connection method** → [ AWS EKS | Manual Kubeconfig ]
+
+```mermaid
+graph TD
+    A[Connection Type] --> B{AWS EKS?}
+    B -->|Yes| C[Use AWS Mode]
+    B -->|No| D[Use Manual Config]
+    D --> E[Standalone Kubeconfig]
+```
+
+### 1. AWS EKS Mode (Recommended for AWS users)
+**Requirements**:
+- AWS credentials with EKS access
+- Cluster name and region
+
+```bash
+# .env configuration
+KUBECONFIG_MODE=aws
+AWS_ACCESS_KEY_ID=AKIA... 
+AWS_SECRET_ACCESS_KEY=secret
+AWS_DEFAULT_REGION=us-west-2
+KUBE_CLUSTER_NAME=prod-cluster
+```
+
+### 2. Manual Kubeconfig Mode
+**For**: Non-AWS clusters or pre-configured access
+
+**Steps**:
+1. Place kubeconfig in project root:
+   ```bash
+   mkdir -p kubeconfig
+   cp ~/.kube/config kubeconfig/prod-cluster.yaml
+   ```
+
+2. Configure environment:
+   ```bash
+   # .env
+   KUBECONFIG_MODE=manual
+   KUBECONFIG_FILE=./kubeconfig/prod-cluster.yaml
+   ```
+
+3. Verify connection:
+   ```bash
+   docker compose run --rm backendim-brain kubectl cluster-info
+   ```
+
+### 🔍 Connection Troubleshooting
+
+| Error | Solution |
+|-------|----------|
+|`server has asked for credentials`| Ensure AWS creds are set even in manual mode for AWS-based configs|
+|`x509 certificate unknown`| Embed CA cert directly in kubeconfig|
+|`permission denied`| Check kubeconfig file permissions: `chmod 600 kubeconfig/*`|
+|`no such file`| Verify volume mount path in docker-compose.yml|
+
 ## 📂 Project Structure
 
 ```
@@ -86,32 +143,6 @@ backend.im-infra/
 - Python 3.9+ (client side)
 - Go 1.18+ (server side)
 
-## 🛠 Manual Kubeconfig Mode
-
-1. **Place your kubeconfig file** in the project directory  
-   Common locations:
-   ```bash
-   cp ~/.kube/config ./kubeconfig/prod-cluster.yaml  # Recommended: kubeconfig/ subdir
-   # OR
-   cp ~/.kube/config ./cluster-access.kubeconfig    # Root directory
-   ```
-
-2. **Configure environment** (`.env` file):
-   ```bash
-   KUBECONFIG_MODE=manual
-   KUBECONFIG_FILE=./kubeconfig/prod-cluster.yaml  # Path relative to project root
-   ```
-
-3. **Start normally** - Volume mount handled automatically:
-   ```bash
-   docker compose up
-   ```
-
-❗ **Security Note**: Your kubeconfig file contains sensitive credentials!  
-✅ Verified safe patterns in `.gitignore`:
-- `*.kubeconfig`
-- `/kubeconfig/`
-- `kubeconfig.yaml`
 
 ## 🚀 Quick Start
 
