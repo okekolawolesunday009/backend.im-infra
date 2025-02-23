@@ -31,5 +31,5 @@ jobs:
           ssh-keyscan -H 44.207.1.144 >> ~/.ssh/known_hosts
 
           ssh -o StrictHostKeyChecking=no ubuntu@18.210.20.229 -i ~/.ssh/id_rsa << 'EOF'
-          cd backend.im-infra|| exit 1  # Ensure folder exists
+          cd backend.im-infra || exit 1  # Ensure folder exists
           git pull origin main  # Pull latest code
