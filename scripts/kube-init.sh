@@ -2,13 +2,12 @@
 set -eo pipefail
 
 
+
+
 echo "Configuring K3s..."
 K3S_CONFIG_DIR="/etc/rancher/k3s"
 K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
 mkdir -p "${K3S_CONFIG_DIR}"
-
-# Wait for K3s to be ready
-echo "Waiting for K3s to stabilize..."
 sleep 10
 
 # Set up KUBECONFIG
