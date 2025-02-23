@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backendim-brain:
-    image: backendim-brain2
+    image: backendim-brain
     build: .
     environment:
       - K3S_CONFIG_MODE=${KUBECONFIG_MODE:-k3s}  # Explicit mode declaration
