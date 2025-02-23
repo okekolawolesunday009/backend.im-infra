@@ -50,7 +50,7 @@ COPY deployments/ ./deployments/
 RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} +
 
 # Set environment variables
-ENV K3S_CONFIG="/root/.kube/config" \
+ENV K3S_CONFIG="/home/ubuntu/.kube/config" \
     PATH="/app/scripts:${PATH}" \
     GIT_SSL_NO_VERIFY="false"
 
