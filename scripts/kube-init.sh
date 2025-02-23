@@ -2,62 +2,23 @@
 set -eo pipefail
 
 # Configuration paths
-AWS_CONFIG_DIR="/home/backenduser/.kube/aws"
-MANUAL_CONFIG_DIR="/home/backenduser/.kube/manual"
-AWS_CONFIG="${AWS_CONFIG_DIR}/config"
-MANUAL_CONFIG="${MANUAL_CONFIG_DIR}/config"
+K3S_CONFIG_DIR="/etc/rancher/k3s"
+K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
 
-# Ensure directories exist
-mkdir -p "${AWS_CONFIG_DIR}" "${MANUAL_CONFIG_DIR}"
+# Ensure configuration directory exists
+mkdir -p "${K3S_CONFIG_DIR}"
 
-if [ "$KUBECONFIG_MODE" = "aws" ]; then
-  echo "Initializing AWS EKS configuration..."
-  
-  # Validate required AWS variables
-  required_vars=(AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION KUBE_CLUSTER_NAME)
-  for var in "${required_vars[@]}"; do
-      if [[ -z "${!var}" ]]; then
-          echo "ERROR: Missing required environment variable $var" >&2
-          exit 1
-      fi
-  done
-  
-  # Clean existing AWS config
-  rm -f "${AWS_CONFIG}"
-  
-  # Configure AWS CLI
-  aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-  aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-  aws configure set default.region ${AWS_DEFAULT_REGION}
+# Enable and start k3s service
+echo "Enabling and starting k3s..."
+sudo systemctl enable k3s
+sudo systemctl start k3s
 
-  # Verify EKS cluster exists
-  if ! aws eks describe-cluster --name ${KUBE_CLUSTER_NAME} >/dev/null; then
-      echo "ERROR: Failed to access EKS cluster '${KUBE_CLUSTER_NAME}'" >&2
-      exit 1
-  fi
-  
-  # Generate fresh config
-  aws eks update-kubeconfig \
-    --name "${KUBE_CLUSTER_NAME}" \
-    --region "${AWS_DEFAULT_REGION}" \
-    --kubeconfig "${AWS_CONFIG}"
-    
-  export KUBECONFIG="${AWS_CONFIG}"
+# Wait for k3s to be ready
+sleep 10
 
-elif [ "$KUBECONFIG_MODE" = "manual" ]; then
-  echo "Using manual kubeconfig..."
-  
-  if [ ! -f "${MANUAL_CONFIG}" ]; then
-    echo "ERROR: Manual config not found at ${MANUAL_CONFIG}"
-    exit 1
-  fi
-  
-  export KUBECONFIG="${MANUAL_CONFIG}"
-
-else
-  echo "ERROR: Invalid KUBECONFIG_MODE '${KUBECONFIG_MODE}'"
-  exit 1
-fi
+# Set up KUBECONFIG for k3s
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
 
 # Verify cluster access
 if ! kubectl cluster-info --request-timeout=10s; then
@@ -69,4 +30,4 @@ fi
 echo "Kubectl Version:"
 kubectl version --client -o json | jq -r '.clientVersion.gitVersion'
 
-exec "$@"
+echo "k3s initialization complete!"

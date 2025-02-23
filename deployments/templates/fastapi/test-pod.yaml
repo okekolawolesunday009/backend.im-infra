@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: test-container
-          image: obimadu/im-base-fastapi
+          image: okekolawole/im-base-fastapi
           resources:
             limits:
-              memory: "1Gi"
-              cpu: "500m"
+              memory: "250Mi"
+              cpu: "250m"
