@@ -44,28 +44,23 @@ RUN /tmp/install-kubectl.sh && \
 # Application setup
 COPY --from=builder /backendim-brain .
 COPY scripts/ ./scripts/
-# Copy your Go code and scripts
-COPY ./scripts/ /app/scripts/
-
-
-
 COPY deployments/ ./deployments/
 
-# Security hardening
-# RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} + && \
-#   adduser -D -u 1001 backenduser && \
-#   mkdir -p /home/backenduser/.kube && \
-#   chown -R backenduser:backenduser /app /home/backenduser/.kube && \
-#   chmod 0755 /home/backenduser && \
-#   chmod 0700 /home/backenduser/.kube
+# Security hardeni/ng
+RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} + && \
+  adduser -D -u 1001 backenduser && \
+  mkdir -p /home/backenduser/.kube && \
+  chown -R backenduser:backenduser /app /home/backenduser/.kube && \
+  chmod 0755 /home/backenduser && \
+  chmod 0700 /home/backenduser/.kube
 
-# # Set environment variables
-# ENV K3S_CONFIG=/home/backenduser/.kube/config \
-#   PATH="/app/scripts:${PATH}" \
-#   GIT_SSL_NO_VERIFY="false"
+# Set environment variables
+ENV K3S_CONFIG=/home/backenduser/.kube/config \
+  PATH="/app/scripts:${PATH}" \
+  GIT_SSL_NO_VERIFY="false"
 
 # Switch to non-root user
-# USER backenduser
+USER backenduser
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
