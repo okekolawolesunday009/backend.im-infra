@@ -44,6 +44,11 @@ RUN /tmp/install-kubectl.sh && \
 # Application setup
 COPY --from=builder /backendim-brain .
 COPY scripts/ ./scripts/
+# Copy your Go code and scripts
+COPY ./scripts/ /app/scripts/
+
+
+
 COPY deployments/ ./deployments/
 
 # Security hardening
@@ -66,8 +71,9 @@ COPY deployments/ ./deployments/
 HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
 
 
-
+# Make sure your script is executable
+RUN chmod +x /app/scripts/kube-init.sh
 
 # Entry point
-ENTRYPOINT ["/scripts/kube-init.sh", "--"]
+ENTRYPOINT ["/app/scripts/kube-init.sh", "--"]
 CMD ["./backendim-brain"]
