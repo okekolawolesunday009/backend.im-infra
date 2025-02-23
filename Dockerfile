@@ -47,18 +47,16 @@ COPY scripts/ ./scripts/
 COPY deployments/ ./deployments/
 
 # Security hardeni/ng
-RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} 
-  # adduser -D -u 1001 backenduser && \
-  # mkdir -p /home/backenduser/.kube && \
-  # chown -R backenduser:backenduser /app /home/backenduser/.kube && \
-  # chmod 0755 /home/backenduser && \
-  # chmod 0700 /home/backenduser/.kube
+# Apply chmod to scripts
+RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} +
 
 # Set environment variables
-
 ENV K3S_CONFIG=/home/ubuntu/.kube/config \
-  PATH="/app/scripts:${PATH}" \
-  GIT_SSL_NO_VERIFY="false"
+    PATH="/app/scripts:${PATH}" \
+    GIT_SSL_NO_VERIFY="false"
+
+# Healthcheck
+
 
 # Switch to non-root user
 # USER backenduser
