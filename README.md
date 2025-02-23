@@ -66,8 +66,8 @@ graph TD
 2. Configure environment:
    ```bash
    # .env
-   KUBE_CONFIG_MODE=manual
-   KUBECONFIG_FILE=./kubeconfig/prod-cluster.yaml
+   export K3S_CONFIG_MODE="manual"
+   export K3S_CONFIG="./etc/rancher/k3s/k3s.yaml"
    ```
 
 3. Verify connection:

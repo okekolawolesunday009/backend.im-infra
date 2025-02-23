@@ -5,6 +5,7 @@ set -eo pipefail
 K3S_CONFIG_DIR="/etc/rancher/k3s"
 K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
 
+
 # Ensure configuration directory exists
 mkdir -p "${K3S_CONFIG_DIR}"
 
@@ -17,8 +18,8 @@ sudo systemctl start k3s
 sleep 10
 
 # Set up KUBECONFIG for k3s
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
+export K3S_CONFIG=/etc/rancher/k3s/k3s.yaml
+echo "export K3S_CONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
 
 # Verify cluster access
 if ! kubectl cluster-info --request-timeout=10s; then
