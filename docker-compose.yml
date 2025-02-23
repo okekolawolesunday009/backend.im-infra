@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backendim-brain:
-    image: backendim-brain
+    image: backendim-brain2
     build: .
     environment:
       - K3S_CONFIG_MODE=${KUBECONFIG_MODE:-k3s}  # Explicit mode declaration
@@ -14,7 +14,7 @@ services:
       - "80:8080"
     volumes:
       - repos-data:/app/repos
-      - ${KUBECONFIG_FILE}:/home/ubuntu/.kube/config  # Kubernetes config
+      - ${KUBECONFIG_FILE}:/home/backenduser/.kube/config  # Kubernetes config
     labels:
       - "traefik.enable=true"
       # Service
