@@ -11,11 +11,15 @@ COMMIT_HASH=$2
 
 # Create repos directory if it doesn't exist
 REPOS_DIR="repos"
+
 mkdir -p "$REPOS_DIR"
 
 # Extract repo name from URL (removes .git if present)
 REPO_NAME=$(basename "$REPO_URL" .git)
+echo "REPOS_NAME"
 REPO_PATH="$REPOS_DIR/$REPO_NAME"
+echo "REPOS_DATH"
+
 
 # Check if directory exists
 if [ ! -d "$REPO_PATH" ]; then

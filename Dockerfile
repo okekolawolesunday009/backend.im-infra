@@ -47,20 +47,15 @@ COPY scripts/ ./scripts/
 COPY deployments/ ./deployments/
 
 # Security hardeni/ng
-RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} + && \
-  adduser -D -u 1001 backenduser && \
-  mkdir -p /home/backenduser/.kube && \
-  chown -R backenduser:backenduser /app /home/backenduser/.kube && \
-  chmod 0755 /home/backenduser && \
-  chmod 0700 /home/backenduser/.kube
+RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 {} +
 
 # Set environment variables
-ENV K3S_CONFIG=/home/backenduser/.kube/config \
-  PATH="/app/scripts:${PATH}" \
-  GIT_SSL_NO_VERIFY="false"
+ENV K3S_CONFIG="/root/.kube/config" \
+    PATH="/app/scripts:${PATH}" \
+    GIT_SSL_NO_VERIFY="false"
 
-# Switch to non-root user
-USER backenduser
+# Switch to root user (default user)
+USER root
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
@@ -70,5 +65,5 @@ HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
 RUN chmod +x /app/scripts/kube-init.sh
 
 # Entry point
-ENTRYPOINT ["/app/scripts/kube-init.sh", "--"]
+ENTRYPOINT [" sudo /app/scripts/kube-init.sh", "--"]
 CMD ["./backendim-brain"]
