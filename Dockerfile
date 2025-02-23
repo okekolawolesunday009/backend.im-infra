@@ -33,10 +33,7 @@ RUN apk add --no-cache --virtual .security-deps \
 # Install k3s (lightweight Kubernetes)
 COPY  scripts/install-kubectl.sh /tmp/
 
-COPY /path/to/kube-init.sh /app/scripts/kube-init.sh
 
-# Set executable permissions for the script
-RUN chmod +x /app/scripts/kube-init.sh
 
 
 RUN /tmp/install-kubectl.sh && \
@@ -68,6 +65,10 @@ COPY deployments/ ./deployments/
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
 
+
+
+# Set executable permissions for the script
+RUN chmod a+x /app/scripts/kube-init.sh
 # Entry point
 ENTRYPOINT ["/app/scripts/kube-init.sh", "--"]
 CMD ["./backendim-brain"]
