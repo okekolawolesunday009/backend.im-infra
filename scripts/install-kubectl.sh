@@ -1,12 +1,12 @@
 #!/bin/sh
 set -eo pipefail
 
-echo "Removing existing k3s installation (if any)..."
-if [ -f "/usr/local/bin/k3s-uninstall.sh" ]; then
-    /usr/local/bin/k3s-uninstall.sh || true
-else
-    echo "No previous k3s installation found, skipping uninstall."
-fi
+# echo "Removing existing k3s installation (if any)..."
+# if [ -f "/usr/local/bin/k3s-uninstall.sh" ]; then
+#     /usr/local/bin/k3s-uninstall.sh || true
+# else
+#     echo "No previous k3s installation found, skipping uninstall."
+# fi
 
 echo "Installing k3s..."
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik" sh -
