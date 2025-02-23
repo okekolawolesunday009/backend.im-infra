@@ -33,6 +33,7 @@ RUN apk add --no-cache --virtual .security-deps \
 # Install k3s (lightweight Kubernetes)
 COPY  scripts/install-kubectl.sh /tmp/
 
+
 RUN /tmp/install-kubectl.sh && \
   rm -f /tmp/install-*.sh && \
   rm -rf /var/cache/apk
