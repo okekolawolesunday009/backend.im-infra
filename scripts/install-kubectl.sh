@@ -1,23 +1,36 @@
 #!/bin/sh
 set -eo pipefail
 
-# echo "Removing existing k3s installation (if any)..."
-# if [ -f "/usr/local/bin/k3s-uninstall.sh" ]; then
-#     /usr/local/bin/k3s-uninstall.sh || true
-# else
-#     echo "No previous k3s installation found, skipping uninstall."
-# fi
+# Ensure the script runs as root
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Please run this script as root."
+  exit 1
+fi
 
-echo "Installing k3s..."
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --disable traefik" sh -
+echo "Configuring K3s..."
+K3S_CONFIG_DIR="/etc/rancher/k3s"
+K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
+mkdir -p "${K3S_CONFIG_DIR}"
 
-echo "Installing K3s without service manager..."
-curl -sfL https://get.k3s.io | INSTALL_K3S_SKIP_ENABLE=true sh -
+# Wait for K3s to be ready
+echo "Waiting for K3s to stabilize..."
+sleep 10
 
-echo "Checking K3s status..."
-k3s kubectl get nodes
+# Set up KUBECONFIG
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" | tee -a /etc/profile.d/k3s.sh
 
-echo "Setting up kubectl..."
-ln -sf /usr/local/bin/k3s /usr/local/bin/kubectl
+# Ensure kubectl is accessible
+export PATH=$PATH:/usr/local/bin
 
-echo "Installation complete. Use 'k3s kubectl' or 'kubectl' to manage your cluster."
+# Verify cluster access
+if ! kubectl cluster-info --request-timeout=10s; then
+  echo "Failed to connect to Kubernetes cluster."
+  exit 1
+fi
+
+# Display Kubectl version
+echo "Kubectl Version:"
+kubectl version --client -o json | jq -r '.clientVersion.gitVersion'
+
+echo "K3s initialization complete!"
