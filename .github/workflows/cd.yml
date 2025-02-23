@@ -11,13 +11,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Deploy to server
+      # - name: Deploy to server
+      #   env:
+      #     DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      #     DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      #     DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+      #     chmod 600 ~/.ssh/deploy_key
+      #     ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "/home/${DEPLOY_USER}/backend.im-infra/scripts/deploy.sh"
+      - name: Deploy to Server
         env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "/home/${DEPLOY_USER}/backend.im-infra/scripts/deploy.sh"
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 44.207.1.144 >> ~/.ssh/known_hosts
+
+          ssh -o StrictHostKeyChecking=no ubuntu@18.210.20.229 -i ~/.ssh/id_rsa << 'EOF'
+          cd backendim-fastapi-app || exit 1  # Ensure folder exists
+          git pull origin main  # Pull latest code
