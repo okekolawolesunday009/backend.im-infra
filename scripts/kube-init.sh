@@ -1,32 +1,31 @@
 #!/bin/bash
 set -eo pipefail
 
-# Configuration paths
+
+echo "Configuring K3s..."
 K3S_CONFIG_DIR="/etc/rancher/k3s"
 K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
-
-# Ensure directories exist
 mkdir -p "${K3S_CONFIG_DIR}"
 
-# Install k3s
-
-# Wait for k3s to be ready
+# Wait for K3s to be ready
+echo "Waiting for K3s to stabilize..."
 sleep 10
 
-# Set up KUBECONFIG for k3s
+# Set up KUBECONFIG
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
+echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" | tee -a /etc/profile.d/k3s.sh
+
+# Ensure kubectl is accessible
+export PATH=$PATH:/usr/local/bin
 
 # Verify cluster access
 if ! kubectl cluster-info --request-timeout=10s; then
-  echo "Failed to connect to Kubernetes cluster"
+  echo "Failed to connect to Kubernetes cluster."
   exit 1
 fi
 
-# Verify kubectl version
+# Display Kubectl version
 echo "Kubectl Version:"
 kubectl version --client -o json | jq -r '.clientVersion.gitVersion'
 
-echo "k3s initialization complete!"
-
-exec "$@"
+echo "K3s initialization complete!"

@@ -7,30 +7,23 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-echo "Configuring K3s..."
-K3S_CONFIG_DIR="/etc/rancher/k3s"
-K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
-mkdir -p "${K3S_CONFIG_DIR}"
+echo "Installing kubectl..."
 
-# Wait for K3s to be ready
-echo "Waiting for K3s to stabilize..."
-sleep 10
+# Install kubectl (if not installed)
+if ! command -v kubectl &> /dev/null; then
+  echo "kubectl not found, installing it..."
 
-# Set up KUBECONFIG
-export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" | tee -a /etc/profile.d/k3s.sh
+  # Download and install kubectl
+  curl -LO "https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl"
+  chmod +x kubectl
+  mv kubectl /usr/local/bin/
 
-# Ensure kubectl is accessible
-export PATH=$PATH:/usr/local/bin
-
-# Verify cluster access
-if ! kubectl cluster-info --request-timeout=10s; then
-  echo "Failed to connect to Kubernetes cluster."
-  exit 1
+  # Verify installation
+  if ! command -v kubectl &> /dev/null; then
+    echo "kubectl installation failed!"
+    exit 1
+  fi
+  echo "kubectl installed successfully."
+else
+  echo "kubectl is already installed."
 fi
-
-# Display Kubectl version
-echo "Kubectl Version:"
-kubectl version --client -o json | jq -r '.clientVersion.gitVersion'
-
-echo "K3s initialization complete!"
