@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: obimadu/im-base-fastapi
+    image: oke/im-base-fastapi
     env:
     - name: DEPLOY_PORT 
       value: "80"

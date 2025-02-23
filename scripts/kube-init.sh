@@ -3,7 +3,7 @@ set -eo pipefail
 
 # Configuration paths
 K3S_CONFIG_DIR="/etc/rancher/k3s"
-K3S_CONFIG="${K3S_CONFIG_DIR}/config.yaml"
+K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
 
 # Ensure directories exist
 mkdir -p "${K3S_CONFIG_DIR}"
