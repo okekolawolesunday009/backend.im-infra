@@ -28,9 +28,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 18.210.20.229 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 44.207.1.144 >> ~/.ssh/known_hosts
 
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@18.210.20.229 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@44.207.1.144<< 'EOF'
           cd backend.im-infra || exit 1  # Ensure folder exists
           git pull origin main  # Pull latest code
           EOF
