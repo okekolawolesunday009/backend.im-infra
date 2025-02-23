@@ -59,7 +59,7 @@ ENV K3S_CONFIG=/home/ubuntu/.kube/config \
 
 
 # Switch to non-root user
-USER ubuntu
+# USER root
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
