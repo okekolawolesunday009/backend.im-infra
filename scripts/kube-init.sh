@@ -4,6 +4,11 @@ set -eo pipefail
 echo "Configuring K3s..."
 K3S_CONFIG_DIR="/etc/rancher/k3s"
 K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
+
+echo "$USER"
+
+USER root
+
 mkdir -p "${K3S_CONFIG_DIR}"
 sleep 10
 
@@ -23,5 +28,11 @@ fi
 # Display Kubectl version
 echo "Kubectl Version:"
 kubectl version --client -o json | jq -r '.clientVersion.gitVersion'
+
+
+
+USER backenduser
+
+echo "$USER"
 
 echo "K3s initialization complete!"
