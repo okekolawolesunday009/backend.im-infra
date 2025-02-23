@@ -15,25 +15,25 @@ services:
     volumes:
       - repos-data:/app/repos
       - ${KUBECONFIG_FILE}:/home/ubuntu/.kube/config  # Kubernetes config
-    labels:
-      - "traefik.enable=true"
-      # Service
-      - "traefik.http.services.backendim-brain.loadbalancer.server.port=8080"
-      # HTTP routing
-      - "traefik.http.routers.backendim-brain-http.entrypoints=web"
-      - "traefik.http.routers.backendim-brain-http.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.backendim-brain-http.service=backendim-brain"
-      # HTTPS with TLS
-      - "traefik.http.routers.backendim-brain-https.tls=true"
-      - "traefik.http.routers.backendim-brain-https.tls.certresolver=myresolver"
-      - "traefik.http.routers.backendim-brain-https.entrypoints=websecure"
-      - "traefik.http.routers.backendim-brain-https.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.backendim-brain-https.service=backendim-brain"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      # TLS Redirect
-      - "traefik.http.routers.backendim-brain-http.middlewares=redirect-https"
-      - "traefik.http.middlewares.redirect-https.redirectScheme.scheme=https"
-      - "traefik.http.middlewares.redirect-https.redirectScheme.permanent=true"
+    # labels:
+      # - "traefik.enable=true"
+      # # Service
+      # - "traefik.http.services.backendim-brain.loadbalancer.server.port=8080"
+      # # HTTP routing
+      # - "traefik.http.routers.backendim-brain-http.entrypoints=web"
+      # - "traefik.http.routers.backendim-brain-http.rule=Host(`${DOMAIN}`)"
+      # - "traefik.http.routers.backendim-brain-http.service=backendim-brain"
+      # # HTTPS with TLS
+      # - "traefik.http.routers.backendim-brain-https.tls=true"
+      # - "traefik.http.routers.backendim-brain-https.tls.certresolver=myresolver"
+      # - "traefik.http.routers.backendim-brain-https.entrypoints=websecure"
+      # - "traefik.http.routers.backendim-brain-https.rule=Host(`${DOMAIN}`)"
+      # - "traefik.http.routers.backendim-brain-https.service=backendim-brain"
+      # - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # # TLS Redirect
+      # - "traefik.http.routers.backendim-brain-http.middlewares=redirect-https"
+      # - "traefik.http.middlewares.redirect-https.redirectScheme.scheme=https"
+      # - "traefik.http.middlewares.redirect-https.redirectScheme.permanent=true"
     networks:
       - backend-net
 
@@ -71,7 +71,7 @@ services:
 #       - backend-net
 
 volumes:
-  traefik_letsencrypt:
+  # traefik_letsencrypt:
   repos-data:
   kube-config:
 
