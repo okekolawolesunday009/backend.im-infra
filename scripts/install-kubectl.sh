@@ -32,16 +32,8 @@ fi
 if ! command -v k3s &> /dev/null; then
   echo "K3s not found, installing it..."
 
-  # Check if systemd or openrc is available
-  if ! command -v systemctl &> /dev/null && ! command -v openrc &> /dev/null; then
-    echo "Warning: systemd or openrc not found. K3s will be installed without service management."
-
-    # Install K3s with no service management
-    curl -sfL https://get.k3s.io | sh -s - --no-deploy servicelb
-  else
-    # Install K3s normally
-    curl -sfL https://get.k3s.io | sh -
-  fi
+  # Install K3s without service management (containerized)
+  curl -sfL https://get.k3s.io | sh -s - --no-deploy servicelb --no-deploy traefik --no-deploy metrics-server --write-kubeconfig-mode 644
 
   echo "K3s installed successfully."
 else
