@@ -60,7 +60,7 @@ ENV K3S_CONFIG=/home/ubuntu/.kube/config \
   GIT_SSL_NO_VERIFY="false"
 
 # Switch to non-root user
-USER backenduser
+# USER backenduser
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
