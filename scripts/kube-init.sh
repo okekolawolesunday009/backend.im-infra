@@ -15,7 +15,7 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" | tee -a /etc/profile.d/k3s.sh
 
 # Ensure kubectl is accessible
-export PATH=$PATH:/usr/local/bin
+# export PATH=$PATH:/usr/local/bin
 
 # Verify cluster access
 if ! kubectl cluster-info --request-timeout=10s; then
