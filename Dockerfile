@@ -33,6 +33,11 @@ RUN apk add --no-cache --virtual .security-deps \
 # Install k3s (lightweight Kubernetes)
 COPY  scripts/install-kubectl.sh /tmp/
 
+COPY /path/to/kube-init.sh /app/scripts/kube-init.sh
+
+# Set executable permissions for the script
+RUN chmod +x /app/scripts/kube-init.sh
+
 
 RUN /tmp/install-kubectl.sh && \
   rm -f /tmp/install-*.sh && \

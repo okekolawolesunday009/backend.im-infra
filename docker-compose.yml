@@ -5,7 +5,7 @@ services:
     image: backendim-brain
     build: .
     environment:
-      - KUBECONFIG_MODE=${KUBECONFIG_MODE:-k3s}  # Explicit mode declaration
+      - K3S_CONFIG_MODE=${KUBECONFIG_MODE:-k3s}  # Explicit mode declaration
       - KUBECONFIG_FILE=${KUBECONFIG_FILE:-/etc/rancher/k3s/k3s.yaml}  # Default to k3s config path
       - KUBE_CLUSTER_NAME=${KUBE_CLUSTER_NAME}
     expose:
@@ -14,7 +14,7 @@ services:
       - "80:8080"
     volumes:
       - repos-data:/app/repos
-      - ${KUBECONFIG_FILE}:/home/backenduser/.kube/config  # Kubernetes config
+      - ${KUBECONFIG_FILE}:/home/ubuntu/.kube/config  # Kubernetes config
     labels:
       - "traefik.enable=true"
       # Service
