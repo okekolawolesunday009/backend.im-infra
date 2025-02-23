@@ -46,12 +46,12 @@ graph TD
 
 ```bash
 # .env configuration
-KUBECONFIG_MODE=aws
-AWS_ACCESS_KEY_ID=AKIA... 
-AWS_SECRET_ACCESS_KEY=secret
-AWS_DEFAULT_REGION=us-west-2
-KUBE_CLUSTER_NAME=prod-cluster
-```
+# KUBECONFIG_MODE=aws
+# AWS_ACCESS_KEY_ID=AKIA... 
+# AWS_SECRET_ACCESS_KEY=secret
+# AWS_DEFAULT_REGION=us-west-2
+# KUBE_CLUSTER_NAME=prod-cluster
+# ```
 
 ### 2. Manual Kubeconfig Mode
 **For**: Non-AWS clusters or pre-configured access
@@ -66,7 +66,7 @@ KUBE_CLUSTER_NAME=prod-cluster
 2. Configure environment:
    ```bash
    # .env
-   KUBECONFIG_MODE=manual
+   KUBE_CONFIG_MODE=manual
    KUBECONFIG_FILE=./kubeconfig/prod-cluster.yaml
    ```
 

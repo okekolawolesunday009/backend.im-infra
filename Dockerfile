@@ -52,7 +52,7 @@ RUN find ./scripts/ -type f \( -name '*.sh' -o -name '*.py' \) -exec chmod 0755 
   chmod 0700 /home/backenduser/.kube
 
 # Set environment variables
-ENV KUBECONFIG=/home/backenduser/.kube/config \
+ENV K3S_CONFIG=/home/backenduser/.kube/config \
   PATH="/app/scripts:${PATH}" \
   GIT_SSL_NO_VERIFY="false"
 
