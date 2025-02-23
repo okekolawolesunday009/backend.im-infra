@@ -1,34 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 set -eo pipefail
 
-# Configuration paths
-K3S_CONFIG_DIR="/etc/rancher/k3s"
-K3S_CONFIG="${K3S_CONFIG_DIR}/k3s.yaml"
+echo "Installing k3s without service manager..."
+curl -sfL https://get.k3s.io | INSTALL_K3S_SKIP_START=true sh -
 
+echo "Manually starting K3s..."
+/usr/local/bin/k3s server --disable traefik --write-kubeconfig-mode 644 &
 
-# Ensure configuration directory exists
-mkdir -p "${K3S_CONFIG_DIR}"
+echo "Waiting for K3s to be ready..."
+sleep 10  # Adjust if needed
 
-# Enable and start k3s service
-echo "Enabling and starting k3s..."
-sudo systemctl enable k3s
-sudo systemctl start k3s
+echo "Setting up kubectl..."
+ln -sf /usr/local/bin/k3s /usr/local/bin/kubectl
 
-# Wait for k3s to be ready
-sleep 10
-
-# Set up KUBECONFIG for k3s
-export K3S_CONFIG=/etc/rancher/k3s/k3s.yaml
-echo "export K3S_CONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
-
-# Verify cluster access
-if ! kubectl cluster-info --request-timeout=10s; then
-  echo "Failed to connect to Kubernetes cluster"
-  exit 1
-fi
-
-# Verify kubectl version
-echo "Kubectl Version:"
-kubectl version --client -o json | jq -r '.clientVersion.gitVersion'
-
-echo "k3s initialization complete!"
+echo "K3s installation complete. Use 'kubectl get nodes' to verify."
