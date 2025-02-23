@@ -67,12 +67,7 @@ HEALTHCHECK --interval=30s --timeout=3s CMD scripts/healthcheck.sh
 
 
 
-COPY ./path/to/kube-init.sh /app/scripts/kube-init.sh
-RUN chmod a+x /app/scripts/kube-init.sh
-RUN chown root:root /app/scripts/kube-init.sh
-RUN ls -l /app/scripts/kube-init.sh
-USER root
 
 # Entry point
-ENTRYPOINT ["/app/scripts/kube-init.sh", "--"]
+ENTRYPOINT ["/scripts/kube-init.sh", "--"]
 CMD ["./backendim-brain"]
