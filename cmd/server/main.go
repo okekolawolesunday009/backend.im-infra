@@ -23,8 +23,8 @@ func main() {
 	r := gin.Default()
 	r.GET("/ws", wsHandler.HandleConnection)
 
-	log.Printf("WebSocket server starting on :8080")
-	if err := r.Run(":8080"); err != nil {
+	log.Printf("WebSocket server starting on :3000")
+	if err := r.Run(":3000"); err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
